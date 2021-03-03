@@ -1,0 +1,9 @@
+#+TITLE: Todo
+
+* Capabilities
+** line return
+** char printing
+** everything
+**
+* Features
+** Save file

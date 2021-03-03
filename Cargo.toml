@@ -1,5 +1,5 @@
 [package]
-name = "jute"
+name = "rute"
 version = "0.1.0"
 authors = ["salad <fmoenne-@student.le-101.fr>"]
 edition = "2018"

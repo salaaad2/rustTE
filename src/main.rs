@@ -15,6 +15,15 @@ pub struct SPos {
     pub ypos: u16,
 }
 
+// object functions :
+//impl SPos {
+//    pub fn print_char(c: char, pos: &mut SPos) {
+//        print!("{}", c);
+//        pos.xpos = pos.xpos + 1;
+//        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+//    }
+//}
+
 impl fmt::Display for SPos {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "({}, {})", self.xpos, self.ypos)
