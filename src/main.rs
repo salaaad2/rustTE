@@ -1,19 +1,24 @@
 extern crate termion;
 
+pub mod key_actions;
+
+use key_actions::print_char;
+
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use std::io::{Write, stdout, stdin};
+use std::fmt;
 
-struct SPos {
+pub struct SPos {
     pub xpos: i32,
     pub ypos: i32,
 }
 
-fn print_char(c: char, pos: &mut SPos) {
-    print!("{}", c);
-    pos.xpos = pos.xpos + 1;
-    print!("{}", pos.xpos);
+impl fmt::Display for SPos {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {})", self.xpos, self.ypos)
+    }
 }
 
 fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
