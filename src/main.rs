@@ -5,21 +5,25 @@ use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use std::io::{Write, stdout, stdin};
 
-fn print_char(c: char, xpos: &mut i32, ypos: &mut i32) {
+struct SPos {
+    pub xpos: i32,
+    pub ypos: i32,
+}
+
+fn print_char(c: char, pos: &mut SPos) {
     print!("{}", c);
-    *xpos = *xpos + 1;
-    print!("{}", xpos);
+    pos.xpos = pos.xpos + 1;
+    print!("{}", pos.xpos);
 }
 
 fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
     let mut out = stdout.into_raw_mode().unwrap();
-    let mut xpos: i32 = 1;
-    let mut ypos: i32 = 1;
+    let mut pos = SPos{ypos : 1, xpos : 1};
 
     for c in stdin.keys() {
         match c.unwrap() {
             Key::Char('q') => break,
-            Key::Char(c) => print_char(c, &mut xpos, &mut ypos),
+            Key::Char(c) => print_char(c, &mut pos),
             Key::Alt(c) => print!("^{}", c),
             Key::Ctrl(c) => print!("*{}", c),
             Key::Esc => print!("ESC"),
