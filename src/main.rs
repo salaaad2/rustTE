@@ -11,8 +11,8 @@ use std::io::{Write, stdout, stdin};
 use std::fmt;
 
 pub struct SPos {
-    pub xpos: i32,
-    pub ypos: i32,
+    pub xpos: u16,
+    pub ypos: u16,
 }
 
 impl fmt::Display for SPos {
