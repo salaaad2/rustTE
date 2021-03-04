@@ -1,13 +1,9 @@
-use termion::terminal_size;
-
 use crate::SPos;
 
 pub fn print_char(c: char, pos: &mut SPos) {
-    let tuple = terminal_size().unwrap();
     print!("{}", c);
     pos.xpos = pos.xpos + 1;
-    //println!("Size is {}", tuple.0);
-    if pos.xpos == tuple.0
+    if pos.xpos == pos.size.0
     {
         pos.ypos = pos.ypos + 1;
         pos.xpos = 1;
@@ -17,6 +13,14 @@ pub fn print_char(c: char, pos: &mut SPos) {
     {
         pos.ypos = pos.ypos + 1;
         pos.xpos = 1;
+        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+    }
+}
+
+pub fn back_space(pos: &mut SPos) {
+    if pos.xpos > 0 && pos.ypos > 0
+    {
+        pos.xpos = pos.xpos - 1;
         print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
     }
 }
