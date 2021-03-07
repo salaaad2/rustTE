@@ -16,6 +16,7 @@ pub struct SPos {
     pub xpos: u16,
     pub ypos: u16,
     pub size: (u16, u16),
+    pub l: String,
 }
 
 impl fmt::Display for SPos {
@@ -26,7 +27,10 @@ impl fmt::Display for SPos {
 
 fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
     let mut out = stdout.into_raw_mode().unwrap();
-    let mut pos = SPos{ypos : 1, xpos : 1, size: terminal_size().unwrap()};
+    let mut pos = SPos{ypos : 1,
+                       xpos : 1,
+                       size: terminal_size().unwrap(),
+                       l: "a".to_string()};
 
         for c in stdin.keys() {
         match c.unwrap() {
