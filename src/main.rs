@@ -3,6 +3,8 @@ extern crate termion;
 pub mod key_actions;
 
 use key_actions::print_char;
+use key_actions::key_left;
+use key_actions::key_up;
 use key_actions::back_space;
 
 use termion::event::Key;
@@ -11,8 +13,11 @@ use termion::raw::IntoRawMode;
 use termion::terminal_size;
 use std::io::{Write, stdout, stdin};
 use std::fmt;
+use std::env;
+use std::fs::File;
 
 pub struct SPos {
+    pub spos: u16,
     pub xpos: u16,
     pub ypos: u16,
     pub size: (u16, u16),
@@ -25,9 +30,10 @@ impl fmt::Display for SPos {
     }
 }
 
-fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
+fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Stdout) {
     let mut out = stdout.into_raw_mode().unwrap();
-    let mut pos = SPos{ypos : 1,
+    let mut pos = SPos{spos : 1,
+                       ypos : 1,
                        xpos : 1,
                        size: terminal_size().unwrap(),
                        l: "a".to_string()};
@@ -39,13 +45,14 @@ fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
             Key::Alt(c) => print!("^{}", c),
             Key::Ctrl(c) => print!("*{}", c),
             Key::Esc => print!("ESC"),
-            Key::Left => print!("←"),
+            Key::Left => key_left(&mut pos),
             Key::Right => print!("→"),
-            Key::Up => print!("↑"),
+            Key::Up => key_up(&mut pos),
             Key::Down => print!("↓"),
             Key::Backspace => back_space(&mut pos),
             _ => {}
         }
+        writeln!(& mut filename, "{}", pos.l);
         out.flush().unwrap();
     }
     write!(out, "{}", termion::cursor::Show).unwrap();
@@ -54,6 +61,24 @@ fn edit(stdin: std::io::Stdin, stdout: std::io::Stdout) {
 fn main() {
     let stdin = stdin();
     let mut stdout = stdout();
+    let cwd = env::temp_dir();
+    let mut i: i32  = 0x0;
+    let mut tfile;
+    let mut filename;
+
+    for argument in env::args() {
+        if i == 1
+        {
+            tfile = cwd.join(argument);
+            filename = File::create(tfile).unwrap();
+        }
+        i = i + 0x1;
+    }
+
+    if i != 1
+    {
+        filename = File::create("default.rute").unwrap();
+    }
 
     write!(stdout,
            "{}{}Welcome to RUTE, a very nice text editor. press q to exit. {}{}{}",
@@ -64,5 +89,5 @@ fn main() {
            termion::cursor::Show)
         .unwrap();
     stdout.flush().unwrap();
-    edit(stdin, stdout);
+    edit(filename, stdin, stdout);
 }
