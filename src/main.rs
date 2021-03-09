@@ -34,7 +34,7 @@ fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Std
     let mut out = stdout.into_raw_mode().unwrap();
     let mut pos = SPos{spos : 1,
                        ypos : 1,
-                       xpos : 1,
+                       xpos : 2,
                        size: terminal_size().unwrap(),
                        l: "a".to_string()};
 
@@ -52,34 +52,26 @@ fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Std
             Key::Backspace => back_space(&mut pos),
             _ => {}
         }
-        writeln!(& mut filename, "{}", pos.l);
         out.flush().unwrap();
     }
     write!(out, "{}", termion::cursor::Show).unwrap();
+    if let Err(e) = writeln!(& mut filename, "{}", pos.l) {
+        println!("Writei: eror: {}", e.to_string());
+    }
 }
 
 fn main() {
     let stdin = stdin();
     let mut stdout = stdout();
-    let cwd = env::temp_dir();
-    let mut i: i32  = 0x0;
-    let mut tfile;
-    let mut filename;
+    let filename;
+    let args: Vec<String> = env::args().collect();
+    let mut input = "default.rute";
 
-    for argument in env::args() {
-        if i == 1
-        {
-            tfile = cwd.join(argument);
-            filename = File::create(tfile).unwrap();
-        }
-        i = i + 0x1;
-    }
-
-    if i != 1
+    if args.len() == 0x2
     {
-        filename = File::create("default.rute").unwrap();
+        input = &args[1];
     }
-
+    filename = File::create(input).unwrap();
     write!(stdout,
            "{}{}Welcome to RUTE, a very nice text editor. press q to exit. {}{}{}",
            termion::clear::All,
