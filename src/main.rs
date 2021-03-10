@@ -4,6 +4,7 @@ pub mod key_actions;
 
 use key_actions::print_char;
 use key_actions::key_left;
+use key_actions::key_right;
 use key_actions::key_up;
 use key_actions::back_space;
 
@@ -46,7 +47,7 @@ fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Std
             Key::Ctrl(c) => print!("*{}", c),
             Key::Esc => print!("ESC"),
             Key::Left => key_left(&mut pos),
-            Key::Right => print!("→"),
+            Key::Right => key_right(&mut pos),
             Key::Up => key_up(&mut pos),
             Key::Down => print!("↓"),
             Key::Backspace => back_space(&mut pos),

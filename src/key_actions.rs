@@ -6,7 +6,7 @@ pub fn print_char(c: char, rute: &mut Rute) {
     if rute.x == rute.size.0
     {
         rute.y = rute.y + 1;
-        rute.x = 1;
+        rute.x = 0;
         print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
     if c == '\n'
@@ -39,6 +39,15 @@ pub fn key_left(rute: &mut Rute) {
     {
         rute.x = rute.x - 0x1;
         rute.spos = rute.spos - 0x1;
+        print!("{}", termion::cursor::Goto(rute.x, rute.y));
+    }
+}
+
+pub fn key_right(rute: &mut Rute) {
+    if rute.x <= rute.spos
+    {
+        rute.x = rute.x + 0x1;
+        rute.spos = rute.spos + 0x1;
         print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
 }
