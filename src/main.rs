@@ -16,25 +16,25 @@ use std::fmt;
 use std::env;
 use std::fs::File;
 
-pub struct SPos {
+pub struct Rute {
     pub spos: u16,
-    pub xpos: u16,
-    pub ypos: u16,
+    pub x: u16,
+    pub y: u16,
     pub size: (u16, u16),
     pub l: String,
 }
 
-impl fmt::Display for SPos {
+impl fmt::Display for Rute {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({}, {}, {}, {})", self.xpos, self.ypos, self.size.0, self.size.1)
+        write!(f, "({}, {}, {}, {})", self.x, self.y, self.size.0, self.size.1)
     }
 }
 
 fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Stdout) {
     let mut out = stdout.into_raw_mode().unwrap();
-    let mut pos = SPos{spos : 1,
-                       ypos : 1,
-                       xpos : 2,
+    let mut pos = Rute{spos : 1,
+                       y : 1,
+                       x : 2,
                        size: terminal_size().unwrap(),
                        l: "a".to_string()};
 

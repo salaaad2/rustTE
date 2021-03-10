@@ -1,53 +1,56 @@
-use crate::SPos;
+use crate::Rute;
 
 use std::convert::TryInto;
 
-pub fn print_char(c: char, pos: &mut SPos) {
-    if pos.xpos == pos.size.0
+pub fn print_char(c: char, rute: &mut Rute) {
+    if rute.x == rute.size.0
     {
-        pos.ypos = pos.ypos + 1;
-        pos.xpos = 1;
-        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+        rute.y = rute.y + 1;
+        rute.x = 1;
+        print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
     if c == '\n'
     {
-        pos.xpos = 0x0;
-        pos.ypos = pos.ypos + 0x1;
-        pos.l.insert(pos.spos.try_into().unwrap(), '\r');
-        pos.spos = pos.spos + 1;
+        rute.x = 0x0;
+        rute.y = rute.y + 0x1;
+        rute.l.insert(rute.spos.try_into().unwrap(), '\r');
+        rute.spos = rute.spos + 1;
     }
-    pos.l.insert(pos.spos.try_into().unwrap(), c);
+    rute.l.insert(rute.spos.try_into().unwrap(), c);
     print!("{}{}", termion::cursor::Goto(1, 1), termion::clear::All);
-    print!("{}", pos.l);
-    pos.spos = pos.spos + 1;
-    pos.xpos = pos.xpos + 1;
-    print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+    print!("{}", rute.l);
+    rute.spos = rute.spos + 1;
+    rute.x = rute.x + 1;
+    print!("{}", termion::cursor::Goto(rute.x, rute.y));
 }
 
-pub fn key_up(pos: &mut SPos) {
-    if pos.ypos >= 1
+pub fn key_up(rute: &mut Rute) {
+    if rute.y >= 1
     {
-        pos.xpos = 0x0;
-        pos.ypos = pos.ypos - 0x1;
-        pos.spos = pos.spos - pos.size.0; /* cool ternary operator incoming*/
-        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+        rute.x = 0x0;
+        rute.y = rute.y - 0x1;
+        rute.spos = rute.spos - rute.size.0; /* cool ternary operator incoming*/
+        print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
 }
 
-pub fn key_left(pos: &mut SPos) {
-    if pos.xpos >= 1
+pub fn key_left(rute: &mut Rute) {
+    if rute.x >= 1
     {
-        pos.xpos = pos.xpos - 0x1;
-        pos.spos = pos.spos - 0x1;
-        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+        rute.x = rute.x - 0x1;
+        rute.spos = rute.spos - 0x1;
+        print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
 }
 
-pub fn back_space(pos: &mut SPos) {
-    if pos.xpos > 0 && pos.ypos > 0
+pub fn back_space(rute: &mut Rute) {
+    if rute.x > 0 && rute.y > 0
     {
-        pos.xpos = pos.xpos - 0x1;
-        pos.spos = pos.spos - 0x1;
-        print!("{}", termion::cursor::Goto(pos.xpos, pos.ypos));
+        rute.x = rute.x - 0x1;
+        rute.spos = rute.spos - 0x1;
+        rute.l.remove(rute.spos.try_into().unwrap());
+        print!("{}{}", termion::cursor::Goto(1, 1), termion::clear::All);
+        print!("{}", rute.l);
+        print!("{}", termion::cursor::Goto(rute.x, rute.y));
     }
 }
