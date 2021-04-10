@@ -6,6 +6,7 @@ use key_actions::print_char;
 use key_actions::key_left;
 use key_actions::key_right;
 use key_actions::key_up;
+use key_actions::key_down;
 use key_actions::back_space;
 
 use termion::event::Key;
@@ -49,7 +50,7 @@ fn edit(mut filename: std::fs::File, stdin: std::io::Stdin, stdout: std::io::Std
             Key::Left => key_left(&mut pos),
             Key::Right => key_right(&mut pos),
             Key::Up => key_up(&mut pos),
-            Key::Down => print!("↓"),
+            Key::Down => key_down(&mut pos),
             Key::Backspace => back_space(&mut pos),
             _ => {}
         }

@@ -34,6 +34,13 @@ pub fn key_up(rute: &mut Rute) {
     }
 }
 
+pub fn key_down(rute: &mut Rute) {
+    rute.x = 0x0;
+    rute.y = rute.y + 0x1;
+    rute.spos = rute.spos - rute.size.0; /* cool ternary operator incoming lol*/
+    print!("{}", termion::cursor::Goto(rute.x, rute.y));
+}
+
 pub fn key_left(rute: &mut Rute) {
     if rute.x >= 1
     {
@@ -53,7 +60,7 @@ pub fn key_right(rute: &mut Rute) {
 }
 
 pub fn back_space(rute: &mut Rute) {
-    if rute.x > 0 && rute.y > 0
+    if rute.x > 0 && rute.y > 0 && rute.spos > 0
     {
         rute.x = rute.x - 0x1;
         rute.spos = rute.spos - 0x1;
